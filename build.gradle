@@ -1,0 +1,83 @@
+buildscript {
+
+    ext {
+
+        springBootVersion = '2.1.9.RELEASE'
+
+    }
+
+    repositories {
+
+        mavenCentral()
+
+        jcenter()
+
+    }
+
+    dependencies {
+
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+
+    }
+
+}
+
+apply plugin: 'java'
+
+apply plugin: 'eclipse'
+
+apply plugin: 'org.springframework.boot'
+
+apply plugin: 'io.spring.dependency-management'
+
+
+
+group 'spring'
+
+version '1.0.4-SNAPSHOT-'
+
+sourceCompatibility = 1.8
+
+
+
+repositories {
+
+    mavenCentral()
+
+    jcenter()
+
+}
+
+dependencies {
+    // 스프링 웹 설치
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+
+    // 스프링 타임리프 설치
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+
+    // 시큐리티 설치 [ 타임리프 ]
+    implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity5'
+    // 시큐리티 설치 [ 스프링 부트 ]
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    // 시큐리티 설치시 기본적인 보안과 로그인, 로그아웃 제공
+    // 초기값 : ID = user, PW = Console에서 확인
+    // 설정 main-java-spring-config 생성
+
+    // Jpa 설치
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
+    // 롬북 설치
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+
+    // h2 설치
+    runtimeOnly 'com.h2database:h2'
+
+    // Oauth2 설치 : SNS 로그인
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+
+}
+
+test {
+    useJUnitPlatform()
+}
