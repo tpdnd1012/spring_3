@@ -12,7 +12,9 @@ import org.springframework.stereotype.Service;
 import spring.domain.MemberEntity;
 import spring.domain.MemberRepository;
 import spring.web.dto.MemberDto;
+import spring.web.dto.SessionDto;
 
+import javax.servlet.http.HttpSession;
 import java.util.Collections;
 
 @Service
@@ -20,6 +22,8 @@ import java.util.Collections;
 public class Oauth2Service implements OAuth2UserService<OAuth2UserRequest, OAuth2User> {
 
     private final MemberRepository memberRepository;
+
+    private final HttpSession httpSession;
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
@@ -48,6 +52,9 @@ public class Oauth2Service implements OAuth2UserService<OAuth2UserRequest, OAuth
         // 회원을 DB에 저장하기
         MemberEntity entity = saveorupdate(memberDto);
 
+        // 세션 저장 [ 엔티티 저장 ]
+        httpSession.setAttribute("member", new SessionDto(entity));
+
         return new DefaultOAuth2User(
                 Collections.singleton(new SimpleGrantedAuthority(entity.getkey()))
                 ,memberDto.getAttribute()
@@ -58,7 +65,13 @@ public class Oauth2Service implements OAuth2UserService<OAuth2UserRequest, OAuth
     // 저장 메소드
     private MemberEntity saveorupdate(MemberDto memberDto) {
 
-        return memberRepository.save(memberDto.toEntity());
+        // 동일 회원[ 이메일 ]이 있으면 업데이트
+        MemberEntity entity = memberRepository.findByemail(memberDto.getEmail()) // 1. 이메일 찾기
+                .map(temp -> temp.update(memberDto.getEmail())) // 2. 존재하면 업데이트 실행
+                .orElse(memberDto.toEntity()); // 2. 존재하지 않으면 엔티티로 변경
+        // 없으면 새롭게 저장
+
+        return memberRepository.save(entity); // 4. 세이브 [ 업데이트 혹은 저장 ]
 
     }
 

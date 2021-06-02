@@ -25,13 +25,17 @@ public class MemberEntity extends BaseTime {
     @Column
     Role role;
 
+    @Column
+    private String platform;
+
     // 생성자
     @Builder
-    public MemberEntity(Long id, String name, String email, Role role) {
+    public MemberEntity(Long id, String name, String email, Role role, String platform) {
         this.id = id;
         this.name = name;
         this.email = email;
         this.role = role;
+        this.platform = platform;
     }
 
     // Role 키 반환 메소드
@@ -41,13 +45,13 @@ public class MemberEntity extends BaseTime {
 
     }
 
-    // 멤버 이름 업데이트 메소드
-    public MemberEntity update(String name) {
+    // 멤버 이메일 업데이트 메소드
+    public MemberEntity update(String email) {
 
-        this.name = name;
+        this.email = email;
 
         return this;
 
     }
-    
+
 }

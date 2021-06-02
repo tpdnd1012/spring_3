@@ -34,6 +34,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .ignoringAntMatchers("/h2-console/**") // 사이트 간 요청 위조 방지를 제거해서 console 사용
 
         .and()
+                .logout() // 로그아웃 관련 설정
+                .logoutRequestMatcher(new AntPathRequestMatcher("/logout")) // 로그아웃 URL 설정
+                .logoutSuccessUrl("/") // 로그아웃 성공시 URL
+                .invalidateHttpSession(true) // 세션 초기화
+
+        .and()
                 .oauth2Login() // Oauth2 로그인 설정
                 .userInfoEndpoint()
                 .userService(oauth2Service);
