@@ -29,7 +29,19 @@ public class MemberDto {
     // SNS 구분 메소드
     public static MemberDto of(String registrationId, String userNameAttributeName, Map<String, Object> attribute) {
 
-        return ofGoogle(userNameAttributeName, attribute);
+        if(registrationId.equals("naver")) {
+
+            return ofNaver(userNameAttributeName, attribute);
+
+        } else if(registrationId.equals("kakao")) {
+
+            return ofKakao(userNameAttributeName, attribute);
+
+        } else {
+
+            return ofGoogle(userNameAttributeName, attribute);
+
+        }
 
     }
 
@@ -45,8 +57,32 @@ public class MemberDto {
     }
 
     // 카카오 회원 가져오기 메소드
+    public static MemberDto ofKakao(String userNameAttributeName, Map<String, Object> attribute) {
+
+        Map<String, Object> kakaoAccount = (Map<String, Object>) attribute.get("kakao_account"); // JSON 이라서 Map으로 형변환
+        Map<String, Object> profile = (Map<String, Object>) kakaoAccount.get("profile");
+
+        return MemberDto.builder()
+                .name((String) profile.get("nickname"))
+                .email((String) kakaoAccount.get("email"))
+                .attribute(attribute)
+                .nameAttributekey(userNameAttributeName).build();
+
+    }
 
     // 네이버 회원 가져오기 메소드
+    public static MemberDto ofNaver(String userNameAttributeName, Map<String, Object> attribute) {
+
+        // 네이버의 attribute 이름 : response
+        Map<String, Object> response = (Map<String, Object>) attribute.get("response");
+
+        return MemberDto.builder()
+                .name((String) response.get("name"))
+                .email((String) response.get("email"))
+                .attribute(attribute)
+                .nameAttributekey(userNameAttributeName).build();
+
+    }
 
     // DTO --> Entity
     public MemberEntity toEntity() {

@@ -8,8 +8,8 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import spring.service.Oauth2Service;
 
-@Configuration
-@EnableWebSecurity
+@Configuration // 외부 라이브러리 설정 값 변경시
+@EnableWebSecurity // 시큐리티 정의시 사용, 기본적인 Web 보안을 활성화 하겠다는 어노테이션 ( extends WebSecurityConfigurerAdapter )
 @RequiredArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
